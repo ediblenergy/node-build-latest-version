@@ -11,7 +11,7 @@ install_latest: $(NODE_VERSION_NAME)/
 	sudo $(MAKE) -C $(NODE_VERSION_NAME) install
 
 $(NODE_VERSION_NAME)/: $(NODE_VERSION_NAME).tar.gz
-	tar -axvf $(NODE_VERSION_NAME).tar.gz
+	tar -axf $(NODE_VERSION_NAME).tar.gz
 	
 $(NODE_VERSION_NAME).tar.gz:
 	wget $(NODE_VERSION_URL)
