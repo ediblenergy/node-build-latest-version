@@ -20,17 +20,34 @@ sub get_latest_url {
     return $version;
 }
 
-sub main {
-    my $latest_url = 'http://nodejs.org/dist/latest/';
-    my $ua = HTTP::Tiny->new;
-    my $cache_file = path("$FindBin::Bin/.latest_node_version");
+my $cache_file = "$FindBin::Bin/.latest_node_version";
+
+sub read_cache_file {
     if( -e "$cache_file" ) {
-        print "".$cache_file->slurp,"\n";
+        my $contents = do {
+            local $/;
+            open( my $fh, "<", $cache_file ) or die "$@ $!";
+            <$fh>;
+        };
+        return "$contents\n";
+        return "";
+    }
+}
+
+sub write_cache_file {
+    my $contents = shift;
+
+}
+sub main {
+    if( my $str = read_cache_file ) {
+        print $str;
         return 0;
     }
+    my $latest_url = 'http://nodejs.org/dist/latest/';
+    my $ua = HTTP::Tiny->new;
     my $res = $ua->get( $latest_url );
     $latest_url = get_latest_url($res->{content});
-    $cache_file->spew($latest_url);
+    write_cache_file( $latest_url );
     print "$latest_url\n";
     return 0;
 }
